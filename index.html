@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>NexoWeb - Automação Futurista</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      background: #16181c;
+      min-height: 100vh;
+      width: 100vw;
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    #network {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0 !important;
+      pointer-events: none;
+    }
+    header {
+      position: fixed;
+      top: 0; left: 0; width: 100vw;
+      background: rgba(20, 24, 28, 0.86);
+      box-shadow: 0 2px 18px #1a8fff14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      height: 68px;
+      backdrop-filter: blur(7px);
+    }
+    .menu-content {
+      width: 100%;
+      max-width: 1180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 36px;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    nav a {
+      color: #a6e1ff;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 7px 18px;
+      border-radius: 17px;
+      transition: background .2s, color .2s;
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+    }
+    nav a:hover, nav a.active {
+      background: #141f2b;
+      color: #33b8ff;
+    }
+    .main-container {
+      min-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      z-index: 2;
+      padding-top: 88px;
+      pointer-events: auto;
+      position: relative;
+    }
+    .logo-nexoweb {
+      width: 300px;
+      max-width: 48vw;
+      filter: drop-shadow(0 0 38px #1a8fff88) drop-shadow(0 0 72px #1a8fff22);
+      margin-bottom: 38px;
+      user-select: none;
+      pointer-events: none;
+      animation: logo-glow 2.2s infinite alternate;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @keyframes logo-glow {
+      0%   { filter: drop-shadow(0 0 14px #33b8ff44) drop-shadow(0 0 28px #33b8ff11);}
+      100% { filter: drop-shadow(0 0 40px #33b8ff77) drop-shadow(0 0 88px #33b8ff22);}
+    }
+    .slogan-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+    .slogan-round-clip {
+      border-radius: 38px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      background: transparent;
+      min-width: 510px;
+      max-width: 96vw;
+      box-sizing: border-box;
+    }
+    .slogan-box {
+      position: relative;
+      background: transparent !important;
+      border-radius: 38px;
+      padding: 24px 56px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      overflow: visible;
+    }
+    .slogan-text {
+      font-size: 1.32rem;
+      color: #33b8ff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      text-align: center;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      z-index: 3;
+      position: relative;
+      white-space: nowrap;
+    }
+    .slogan-text .azul {
+      color: #33b8ff;
+      font-weight: 500;
+    }
+    .slogan-svg-border {
+      position: absolute;
+      top: -13px; left: -13px;
+      width: calc(100% + 26px);
+      height: calc(100% + 26px);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .svg-outline {
+      stroke: #33b8ff;
+      stroke-width: 7.5;
+      opacity: 0.74;
+      filter: drop-shadow(0 0 20px #33b8ffcc) blur(1.2px);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: opacity 0.5s, filter 0.5s;
+    }
+    /* WHATSAPP BUTTON */
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 28px;
+      padding: 13px 34px 13px 24px;
+      border-radius: 24px;
+      font-size: 1.18rem;
+      font-weight: 600;
+      color: #181c22;
+      background: linear-gradient(90deg,#25D366 80%,#33b8ff 100%);
+      box-shadow: 0 2px 14px #25d36633, 0 1px 10px #1a8fff22;
+      border: none;
+      cursor: pointer;
+      transition: 
+        background 0.25s, 
+        box-shadow 0.19s, 
+        transform 0.19s cubic-bezier(.53,1.6,.56,1);
+      text-decoration: none;
+      outline: none;
+      user-select: none;
+      position: relative;
+      z-index: 2;
+      pointer-events: auto;
+    }
+    .whatsapp-btn:hover, .whatsapp-btn:focus {
+      background: linear-gradient(93deg,#33b8ff 25%,#25D366 100%);
+      color: #fff;
+      box-shadow: 0 6px 28px #25d36655, 0 1px 18px #1a8fff44;
+      transform: scale(1.045) translateY(-2px);
+    }
+    .whatsapp-btn svg {
+      filter: drop-shadow(0 0 6px #1ed760bb);
+      background: transparent;
+    }
+    /* TECNOLOGIAS */
+    .tecnologias-bloco {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 42px;
+      margin-bottom: 10px;
+      gap: 18px;
+      z-index: 3;
+      pointer-events: auto;
+    }
+    .tecnologias-label {
+      font-size: 1.07rem;
+      color: #a6e1ff;
+      font-weight: 500;
+      margin-bottom: 2px;
+      text-shadow: 0 2px 10px #33b8ff33;
+      letter-spacing: 0.02em;
+    }
+    .tecnologias-icones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      justify-content: center;
+    }
+    .tec-icn {
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(120deg, #0c151e 60%, #1a8fff22 100%);
+      border-radius: 20px;
+      box-shadow: 0 3px 20px #33b8ff26, 0 1px 12px #1a8fff11;
+      transition: transform 0.28s cubic-bezier(.53,1.6,.56,1), box-shadow 0.2s, background 0.3s;
+      cursor: pointer;
+      position: relative;
+      will-change: transform;
+      border: 1.5px solid #182436;
+      perspective: 800px;
+    }
+    .tec-icn img, .tec-icn svg {
+      width: 36px;
+      height: 36px;
+      filter: drop-shadow(0 2px 8px #33b8ff66);
+      transition: filter 0.23s;
+      user-select: none;
+      pointer-events: none;
+      display: block;
+    }
+    .tec-icn:hover, .tec-icn:focus {
+      transform: rotateY(18deg) rotateX(12deg) scale(1.19);
+      box-shadow: 0 8px 42px #33b8ff77, 0 1px 22px #1a8fff44;
+      background: linear-gradient(120deg, #1a8fff77 40%, #1ddedb77 100%);
+    }
+    .tec-icn:hover img, .tec-icn:focus img,
+    .tec-icn:hover svg, .tec-icn:focus svg {
+      filter: drop-shadow(0 0 18px #fff) drop-shadow(0 0 14px #33b8ffcc);
+    }
+    section {
+      max-width: 1080px;
+      margin: 0 auto;
+      margin-bottom: 84px;
+      padding: 12px 24px 0 24px;
+      color: #d9f6ff;
+      z-index: 3;
+      position: relative;
+    }
+    section h2 {
+      color: #33b8ff;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 18px #1a8fff20;
+    }
+    .servicos-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+    .servicos-list li {
+      flex: 1 1 230px;
+      min-width: 220px;
+      background: #1d232b88;
+      border-radius: 18px;
+      padding: 30px 24px;
+      box-shadow: 0 1px 10px #1a8fff11;
+      backdrop-filter: blur(2px);
+      transition:
+        transform 0.22s cubic-bezier(.5,2,.5,1),
+        box-shadow 0.23s cubic-bezier(.5,2,.5,1),
+        background 0.23s;
+      position: relative;
+      cursor: pointer;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .servicos-list li:hover {
+      transform: translateY(-11px) scale(1.035) rotate(-1deg);
+      box-shadow: 0 8px 38px #21a9ff44, 0 1px 18px #1a8fff33;
+      background: linear-gradient(98deg, #182c3d 60%, #1a8fff22 100%);
+    }
+    .servicos-list li::before {
+      content: "";
+      display: block;
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      pointer-events: none;
+      background: radial-gradient(circle at 60% 40%, #33b8ff55 0%, #16181c00 80%);
+      opacity: 0;
+      transition: opacity 0.18s;
+      z-index: 2;
+    }
+    .servicos-list li:hover::before {
+      opacity: 1;
+    }
+    .form-btn {
+      padding: 13px 18px;
+      border-radius: 14px;
+      background: linear-gradient(90deg,#33b8ff 60%,#19e3ff 100%);
+      color: #181c22;
+      font-size: 1.07rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 1px 8px #169dff55;
+      transition:
+        transform 0.17s cubic-bezier(.53,1.6,.56,1),
+        box-shadow 0.17s,
+        background 0.23s;
+      outline: none;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .form-btn:hover, .form-btn:focus {
+      transform: scale(1.06) translateY(-2px);
+      box-shadow: 0 8px 32px #33b8ff88, 0 1px 18px #1a8fff33;
+      background: linear-gradient(90deg, #21a9ff 40%, #19e3ff 100%);
+    }
+    .form-btn::after {
+      content: "";
+      position: absolute;
+      left: -30%; top: 0; bottom: 0;
+      width: 60%;
+      background: linear-gradient(120deg, #fff6 10%, #33b8ff88 90%);
+      opacity: 0.13;
+      transform: skewX(-17deg);
+      pointer-events: none;
+      transition: left 0.29s cubic-bezier(.6,.1,.5,1.3), opacity 0.22s;
+      z-index: 2;
+    }
+    .form-btn:hover::after, .form-btn:focus::after {
+      left: 95%;
+      opacity: 0.2;
+      transition: left 0.29s cubic-bezier(.6,.1,.5,1.3), opacity 0.22s;
+    }
+    footer {
+      margin-top: 90px;
+      color: #ffffff;
+      text-align: center;
+      font-size: 1rem;
+      padding: 24px 0 18px 0;
+      opacity: 0.6;
+      letter-spacing: 0.03em;
+      z-index: 4;
+      position: relative;
+    }
+    @media (max-width: 900px) {
+      .menu-content { padding: 0 10vw;}
+      .main-container { padding-top: 70px;}
+      .logo-nexoweb { width: 110px;}
+      .slogan-round-clip { min-width: unset; }
+      .slogan-box { padding: 14px 4vw;}
+      .slogan-text { font-size: 0.97rem;}
+      section { padding: 8px 6vw 0 6vw; }
+      .servicos-list { flex-direction: column; gap:18px; }
+      .tecnologias-icones { gap: 14px;}
+      .tec-icn { width: 44px; height: 44px;}
+      .tec-icn img, .tec-icn svg { width: 29px; height: 29px;}
+    }
+    @media (max-width: 500px) {
+      nav a { font-size: 0.97rem; padding: 5px 8px;}
+      .slogan-box { padding: 8px 3vw;}
+      .main-container { padding-top: 52px;}
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <canvas id="network"></canvas>
+  <header>
+    <div class="menu-content">
+      <nav>
+        <a href="#inicio" class="active">Início</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#contato">Contato</a>
+      </nav>
+    </div>
+  </header>
+  <div class="main-container" id="inicio">
+    <img src="logo-nexoweb.png" alt="NexoWeb Logo" class="logo-nexoweb" draggable="false"/>
+    <div class="slogan-wrapper">
+      <div class="slogan-round-clip">
+        <div class="slogan-box">
+          <span class="slogan-text">
+            <span class="azul">Conectando ideias</span>, automatizando o futuro.
+          </span>
+          <svg class="slogan-svg-border" viewBox="0 0 600 90" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <rect x="8" y="8" width="584" height="74" rx="37" class="svg-outline"/>
+          </svg>
+        </div>
+      </div>
+      <!-- BOTÃO WHATSAPP -->
+      <a href="https://wa.me/5577981124033" target="_blank" class="whatsapp-btn">
+        <svg width="23" height="23" viewBox="0 0 32 32" fill="none" style="vertical-align: middle; margin-right:8px;">
+          <circle cx="16" cy="16" r="16" fill="#25D366"/>
+          <path d="M23.5 20.4c-.3-.2-1.8-.9-2-1- .3-.1-.5-.2-.8.1-.2.2-.9 1-1.1 1.2-.2.2-.4.2-.7.1-.3-.2-1.1-.4-2.1-1.3-.8-.7-1.3-1.5-1.5-1.7-.2-.3 0-.5.1-.7.1-.1.2-.3.4-.4.1-.2.1-.4.2-.6.1-.2 0-.4 0-.5 0-.2-.8-1.8-1-2.4-.3-.7-.5-.6-.8-.6h-.6c-.2 0-.5.1-.7.3-.2.3-.8.8-.8 2s.8 2.3 2.6 3.7c1.8 1.4 3.3 1.8 3.8 1.7.5 0 1.3-.5 1.5-.9.2-.4.2-.8.1-.9z" fill="#fff"/>
+        </svg>
+        Fale conosco no WhatsApp
+      </a>
+      <!-- TECNOLOGIAS PRINCIPAIS -->
+      <div class="tecnologias-bloco">
+        <span class="tecnologias-label">Nossas principais tecnologias:</span>
+        <div class="tecnologias-icones">
+          <div class="tec-icn" title="HTML5">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+          </div>
+          <div class="tec-icn" title="CSS3">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+          </div>
+          <div class="tec-icn" title="JavaScript">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+          </div>
+          <div class="tec-icn" title="Python">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+          </div>
+          <!-- POWER BI - SVG customizado -->
+          <div class="tec-icn" title="Power BI">
+            <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
+              <rect width="48" height="48" rx="14" fill="url(#grad-pbi)"/>
+              <g>
+                <rect x="15" y="22" width="3" height="9" rx="1.5" fill="#fff"/>
+                <rect x="21" y="17" width="3" height="14" rx="1.5" fill="#fff"/>
+                <rect x="27" y="20" width="3" height="11" rx="1.5" fill="#fff"/>
+                <rect x="33" y="13" width="3" height="18" rx="1.5" fill="#fff"/>
+              </g>
+              <defs>
+                <linearGradient id="grad-pbi" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#F9D23C"/>
+                  <stop offset="1" stop-color="#F2B800"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="tec-icn" title="Node.js">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js">
+          </div>
+          <div class="tec-icn" title="React">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React">
+          </div>
+          <div class="tec-icn" title="Git">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git">
+          </div>
+          <div class="tec-icn" title="Docker">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section id="sobre">
+    <h2>Sobre a NexoWeb</h2>
+    <p>
+      A <b>NexoWeb</b> nasceu para conectar pessoas, empresas e ideias através da tecnologia de automação e do desenvolvimento web moderno.<br><br>
+      Combinamos criatividade, inovação e expertise para entregar soluções digitais que realmente transformam o seu negócio.<br><br>
+      Nosso time é apaixonado por criar experiências <span style="color:#33b8ff">tecnológicas</span> que simplificam processos, elevam resultados e impulsionam o futuro.
+    </p>
+  </section>
+  <section id="servicos">
+    <h2>Serviços</h2>
+    <ul class="servicos-list">
+      <li>
+        <b style="color:#33b8ff">Desenvolvimento Web</b><br>
+        Sites modernos, responsivos, rápidos, do zero ao avançado.
+      </li>
+      <li>
+        <b style="color:#33b8ff">Automações</b><br>
+        Integração de sistemas, bots, rotinas inteligentes, APIs e processos automatizados.
+      </li>
+      <li>
+        <b style="color:#33b8ff">Consultoria</b><br>
+        Ajuda estratégica para inovar com tecnologia e digitalização.
+      </li>
+      <li>
+        <b style="color:#33b8ff">Soluções Sob Medida</b><br>
+        Projetos exclusivos para cada desafio do seu negócio.
+      </li>
+    </ul>
+  </section>
+  <section id="contato">
+    <h2>Contato</h2>
+    <form style="max-width:400px;margin:0 auto;display:flex;flex-direction:column;gap:18px;">
+      <input type="text" placeholder="Seu nome" required style="padding:13px 18px;border-radius:14px;border:1px solid #222;background:#181c22;color:#fff;font-size:1rem;outline:none;">
+      <input type="email" placeholder="Seu e-mail" required style="padding:13px 18px;border-radius:14px;border:1px solid #222;background:#181c22;color:#fff;font-size:1rem;outline:none;">
+      <textarea placeholder="Mensagem" required style="padding:13px 18px;border-radius:14px;border:1px solid #222;background:#181c22;color:#fff;font-size:1rem;resize:vertical;min-height:70px;max-height:200px;outline:none;"></textarea>
+      <button type="submit" class="form-btn">Enviar</button>
+    </form>
+    <div style="margin-top:34px;color:#7ecaff;font-size:1.08rem;">
+      Ou, se preferir: <b>contato@nexoweb.com.br</b>
+    </div>
+  </section>
+  <footer>
+    &copy; 2025 NexoWeb. Todos os direitos reservados.
+  </footer>
+  <script>
+    // Pulso harmonioso da borda neon
+    let t = 0;
+    function pulseOutline() {
+      t += 0.022;
+      const pulse = 0.65 + Math.sin(t) * 0.31;
+      document.querySelectorAll('.svg-outline').forEach(el => {
+        el.style.opacity = pulse.toFixed(2);
+        el.style.filter = `drop-shadow(0 0 ${(14+pulse*28).toFixed(1)}px #33b8ffcc) blur(1.2px)`;
+      });
+      requestAnimationFrame(pulseOutline);
+    }
+    pulseOutline();
+
+    // Partículas do fundo
+    const canvas = document.getElementById('network');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', () => {
+      resize();
+      initParticles();
+    });
+    resize();
+
+    const particles = [];
+    let particleCount = Math.floor((window.innerWidth + window.innerHeight) / 17);
+    const maxDistance = 130;
+
+    function initParticles() {
+      particles.length = 0;
+      particleCount = Math.floor((window.innerWidth + window.innerHeight) / 17);
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.60, // Mais rápido!
+          vy: (Math.random() - 0.5) * 0.60, // Mais rápido!
+        });
+      }
+    }
+    initParticles();
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      // Partículas
+      for (let p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#33b8ff';
+        ctx.shadowColor = '#33b8ff';
+        ctx.shadowBlur = 6;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      // Linhas entre partículas próximas
+      for (let i = 0; i < particleCount; i++) {
+        for (let j = i + 1; j < particleCount; j++) {
+          const p1 = particles[i], p2 = particles[j];
+          const dx = p1.x - p2.x, dy = p1.y - p2.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < maxDistance) {
+            const alpha = 1 - dist / maxDistance;
+            ctx.strokeStyle = `rgba(51,184,255,${alpha * 0.12})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Menu scroll suave & highlight ativo
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', e => {
+        const href = link.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+          document.querySelector(href).scrollIntoView({behavior: 'smooth'});
+        }
+      });
+    });
+
+    // Destaca link no menu conforme rolagem
+    const sections = ['inicio','sobre','servicos','contato'];
+    window.addEventListener('scroll', () => {
+      let idx = 0;
+      for (let i = 0; i < sections.length; i++) {
+        const el = document.getElementById(sections[i]);
+        if (el && window.scrollY + 100 >= el.offsetTop) idx = i;
+      }
+      document.querySelectorAll('nav a').forEach((l,i)=>l.classList.toggle('active',i===idx));
+    });
+  </script>
+</body>
+</html>
